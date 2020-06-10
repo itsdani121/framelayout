@@ -20,4 +20,7 @@
     <string name="Name">Name</string>
     <string name="hello_first_recyclerview">hello_first_recyclerview</string>
     <string name="PersonName">Person Name</string>
+    <string name="search">Search</string>
+    <string name="Undo">undo</string>
+    <string name="Delete">Delete</string>
 </resources>
