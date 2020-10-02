@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/favorites"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/favorites"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/music"
+        android:icon="@drawable/ic_library_music"
+        android:title="@string/music"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/places"
+        android:icon="@drawable/ic_place"
+        android:title="@string/places"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/news"
+        android:icon="@drawable/ic_news"
+        android:title="@string/news"
+        app:showAsAction="always" />
+
+</menu>

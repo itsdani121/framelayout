@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_8sdp"
     android:background="@drawable/background"
     android:elevation="@dimen/_8sdp"
     android:orientation="vertical"
     app:cardUseCompatPadding="true"
-    tools:context=".secondActivity"
-    android:layout_marginBottom="@dimen/_8sdp"
-    >
+    tools:context=".secondActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -22,9 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background"
-            android:padding="@dimen/_8sdp"
             android:elevation="@dimen/_8sdp"
-            >
+            android:padding="@dimen/_8sdp">
 
 
             <TextView
@@ -46,8 +44,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/recycler_listname"
                 app:layout_constraintEnd_toEndOf="@id/recycler_listname"
                 app:layout_constraintStart_toStartOf="@id/recycler_listname"
-                app:layout_constraintTop_toBottomOf="@id/recycler_listname"
-                >
+                app:layout_constraintTop_toBottomOf="@id/recycler_listname">
 
 
                 <ImageView
@@ -58,8 +55,7 @@
                     android:src="@drawable/ic_person"
                     app:layout_constraintBottom_toBottomOf="@id/recycler_lm"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/recycler_name"

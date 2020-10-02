@@ -1,157 +1,242 @@
 package com.example.framelayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.bumptech.glide.Glide;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.snackbar.Snackbar;
 
+import net.alhazmy13.mediapicker.Image.ImagePicker;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerClickListener, RecyclerActionClick {
-
     private RecyclerView recyclerView;
     private detailAdapt adapt;
+    private Button btn;
     private List<detailModel> modelList = new ArrayList<>();
-    detailModel modelData, swipeData;
+    private detailModel deleteData, removeData;
+    private ImageView viewImage;
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+
             return false;
         }
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            final int position = viewHolder.getAdapterPosition();
+            int position = viewHolder.getAdapterPosition();
             if (direction == ItemTouchHelper.LEFT) {
-                swipeData = modelList.get(position);
+                deleteData = modelList.get(position);
 
-                showDialogBox(position, true);
+                showData(position, true, viewHolder.itemView.getContext());
+
             }
 
 
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(R.layout.toolbar_recycle);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recycler_details);
+        viewImage = findViewById(R.id.recycler_iv);
+        btn = findViewById(R.id.datebtn);
+        TextView textView = actionBar.getCustomView().findViewById(R.id.custom_action_bar);
+        textView.setText("My Application");
+        // Objects.requireNonNull(getSupportActionBar()).setTitle(null);
+
         populateList();
+        showDatePicker();
+    }
+
+    private void showDatePicker() {
+        MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText("Select a Date ");
+        final MaterialDatePicker materialDatePicker = builder.build();
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materialDatePicker.show(getSupportFragmentManager(), "date picker");
+            }
+        });
+    }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.more, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        boolean isclick = false;
+        switch (item.getItemId()) {
+
+            case R.id.delete:
+                isclick = true;
+                Toast.makeText(this, "delete item ", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.search:
+                isclick = true;
+                Toast.makeText(this, "search click", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+        return false;
     }
 
     private void populateList() {
-
         for (int i = 0; i < 10; i++) {
             int img = R.drawable.ic_person;
-            String person = "Person  " + i;
-            String name = "Person Name " + i;
-            String msg = "Person Last Message " + i;
-            detailModel model = new detailModel(person, name, msg, img);
+            int img2 = R.drawable.ic_launcher_foreground;
+
+            String person = "this person is " + i;
+            String name = "this person name  is " + i;
+            String msg = "this person last message is " + i;
+
+            detailModel model = new detailModel(person, name, msg, img2, img);
             modelList.add(model);
+
+            showRecycle(modelList);
+
         }
-        addRecycle(modelList);
+
     }
 
-    private void addRecycle(List<detailModel> modelList) {
+    private void showRecycle(List<detailModel> modelList) {
         adapt = new detailAdapt(this, modelList, this, this);
         LinearLayoutManager layout = new LinearLayoutManager(this);
-        layout.setSmoothScrollbarEnabled(true);
-        recyclerView.setAdapter(adapt);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layout);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapt);
 
         ItemTouchHelper helper = new ItemTouchHelper(simpleCallback);
         helper.attachToRecyclerView(recyclerView);
+    }
+
+    private void showImage() {
+
+        ImagePicker.Builder builder = new ImagePicker.Builder(MainActivity.this);
+
+        builder.allowMultipleImages(false);
+
+        builder.allowOnlineImages(false);
+        builder.compressLevel(ImagePicker.ComperesLevel.MEDIUM);
+        builder.scale(500, 500);
+        builder.directory(ImagePicker.Directory.DEFAULT);
+        builder.extension(ImagePicker.Extension.PNG);
+        builder.mode(ImagePicker.Mode.CAMERA_AND_GALLERY);
+
+        builder.build();
 
     }
 
-    @Override
-    public void onDeleteCLick(Object obj, int position) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        showDialogBox(position, false);
+        if (resultCode == RESULT_OK && data != null) {
+            if (requestCode == ImagePicker.IMAGE_PICKER_REQUEST_CODE) {
+                List<String> paths = data.getStringArrayListExtra(ImagePicker.EXTRA_IMAGE_PATH);
 
-    }
+                if (paths != null) {
+                    String imagePath = paths.get(0);
 
-    private void showDialogBox(final int position, final boolean isSwiped) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirmation");
-        builder.setMessage("Are you sure to delete this Item");
-        builder.setCancelable(false);
-        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                deleteItem(position);
+                    // Load picked image
+                    Glide.with(this).load(imagePath).into(viewImage);
+                }
 
             }
-        });
-        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                adapt.notifyDataSetChanged();
-               /* if (isSwiped) {
-                    modelList.add(position, swipeData);
-                    adapt.notifyItemInserted(position);
-
-                }*/
-
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-    }
-
-    private void deleteItem(final int position) {
-        modelData = modelList.get(position);
-        modelList.remove(position);
-        adapt.notifyItemRemoved(position);
-        adapt.notifyItemRangeChanged(position,modelList.size());
-        Snackbar snackbar = Snackbar.make(recyclerView, "item removed at position " + position, Snackbar.LENGTH_LONG);
-        snackbar.setAction("undo", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                modelList.add(position, modelData);
-                adapt.notifyItemInserted(position);
-                adapt.notifyItemRangeChanged(position,modelList.size());
-
-            }
-        });
-        snackbar.show();
-    }
-
-
-    @Override
-    public void onUndoCLick(Object obj, int position) {
+        }
 
     }
 
     @Override
     public void onSingleClick(Object obj, int position) {
         detailModel model = (detailModel) obj;
-        Toast.makeText(this, "click at " + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "item click at " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDeleteCLick(Object obj, int position) {
+        showData(position, false, this);
+    }
+
+    private void showData(final int position, final boolean isSwiped, Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setMessage("Are You Sure for Delete This");
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                removeData = modelList.get(position);
+                modelList.remove(position);
+                adapt.notifyItemRemoved(position);
+                Snackbar snackbar = Snackbar.make(recyclerView, "item click at position " + position, Snackbar.LENGTH_LONG);
+                snackbar.setAction("undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        modelList.add(position, removeData);
+                        adapt.notifyItemInserted(position);
+                    }
+
+
+                });
+                snackbar.show();
+            }
+        });
+        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (isSwiped) {
+                    modelList.add(deleteData);
+                    adapt.notifyItemChanged(position);
+                }
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+
+    }
+
+    @Override
+    public void onAddCLick(Object obj, int position) {
+
     }
 }

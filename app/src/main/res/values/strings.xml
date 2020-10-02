@@ -23,4 +23,10 @@
     <string name="search">Search</string>
     <string name="Undo">undo</string>
     <string name="Delete">Delete</string>
+    <string name="Add">add</string>
+    <string name="favorites">Favorites</string>
+    <string name="music">music</string>
+    <string name="places">places</string>
+    <string name="news">News</string>
+    <string name="date">Date</string>
 </resources>

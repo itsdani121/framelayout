@@ -1,9 +1,13 @@
 package com.example.framelayout;
 
-public class detailModel {
-private  String name,lastmsg,person;
-private int img;
-private boolean Expandable;
+import android.widget.TextView;
+
+import net.alhazmy13.mediapicker.Image.ImagePicker;
+
+public class detailModel  {
+String person,name,lastmsg;
+int mainImage,recycleImg;
+boolean Expand;
 
     public String getPerson() {
         return person;
@@ -11,22 +15,6 @@ private boolean Expandable;
 
     public void setPerson(String person) {
         this.person = person;
-    }
-
-    public boolean isExpandable() {
-        return Expandable;
-    }
-
-    public void setExpandable(boolean expandable) {
-        Expandable = expandable;
-    }
-
-    public detailModel(String person,String name, String lastmsg, int img) {
-        this.name = name;
-        this.lastmsg = lastmsg;
-        this.img = img;
-        this.person=person;
-        this.Expandable=false;
     }
 
     public String getName() {
@@ -45,12 +33,36 @@ private boolean Expandable;
         this.lastmsg = lastmsg;
     }
 
-    public int getImg() {
-        return img;
+    public int getMainImage() {
+        return mainImage;
     }
 
-    public void setImg(int img) {
-        this.img = img;
+    public void setMainImage(int mainImage) {
+        this.mainImage = mainImage;
+    }
+
+    public int getRecycleImg() {
+        return recycleImg;
+    }
+
+    public void setRecycleImg(int recycleImg) {
+        this.recycleImg = recycleImg;
+    }
+
+    public boolean isExpand() {
+        return Expand;
+    }
+
+    public void setExpand(boolean expand) {
+        Expand = expand;
+    }
+
+    public detailModel(String person, String name, String lastmsg, int mainImage, int recycleImg) {
+        this.person = person;
+        this.name = name;
+        this.lastmsg = lastmsg;
+        this.mainImage = mainImage;
+        this.recycleImg = recycleImg;
+        this.Expand=false;
     }
 }
-
